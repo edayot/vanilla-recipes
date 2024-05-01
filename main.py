@@ -30,7 +30,7 @@ NAMESPACE = "crafter_addon"
 def beet_default(ctx: Context):
     ctx.inject(Vanilla)
 
-    mc_version = ctx.meta.get("target_mc_version", MINECRAFT_VERSION)
+    mc_version = ctx.meta.get(NAMESPACE, {}).get("mc_version", MINECRAFT_VERSION)
 
     recipes = ctx.inject(Vanilla).releases[mc_version].data.recipes
     for recipe in recipes:
