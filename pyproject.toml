@@ -1,20 +1,39 @@
 [tool.poetry]
-name = "crafter-addon"
+name = "vanilla-recipes"
 version = "0.1.0"
 description = ""
 authors = ["edayot <pro.e.dayot@gmail.com>"]
 license = "MIT"
 readme = "README.md"
+package-mode = false
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.11"
 beet = "^0.105.0"
 mecha = "^0.94.0"
+weld-deps = "^0.6.0"
+
+[tool.poetry.dev-dependencies]
+python-semantic-release = "^8.7.0"
 
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.semantic_release]
+major_on_zero = false
+build_command = 'beet -s data_pack.zipped=true -s resource_pack.zipped=true && beet -s data_pack.zipped=true -s resource_pack.zipped=true -s meta.weld_deps.enabled=false -s data_pack.name="{{ project_id }}_{{ project_version }}_dp" -s resource_pack.name="{{ project_id }}_{{ project_version }}_rp"'
+dist_path = "build"
+version_toml = ["pyproject.toml:tool.poetry.version"]
+version_source = "commit"
+
+remove_dist = false
+tag_format = "v{version}"
+
+[tool.semantic_release.publish]
+dist_glob_patterns = ["build/*.zip"]
+upload_to_vcs_release = true
 
 
 
@@ -25,6 +44,31 @@ pipeline = [
     "main",
     "mecha",
 ]
+require=[
+    "weld_deps"
+]
+
+[tool.beet.data_pack]
+name = "{{ project_id }}_{{ project_version }}_dp_bundled"
+
+[tool.beet.resource_pack]
+name = "{{ project_id }}_{{ project_version }}_rp_bundled"
+
+[tool.beet.meta]
+mc_supports = ["1.20.5"]
 
 [tool.beet.meta.mecha]
 multiline = true
+
+
+[tool.beet.meta.weld_deps]
+enable_weld_merging=true
+clean_load_tag=true
+include_prerelease=false
+
+
+[[tool.beet.meta.weld_deps.deps]]
+id = "crafter"
+match = ">=0.2.0"
+source = "smithed"
+

@@ -23,7 +23,7 @@ import json
 
 
 MINECRAFT_VERSION = "1.20.6"
-NAMESPACE = "crafter_addon"
+NAMESPACE = "vanilla_recipes"
 
 
 
