@@ -2,6 +2,13 @@
 
 
 
+## v0.1.1 (2024-05-01)
+
+### Fix
+
+* fix: name ([`6487a98`](https://github.com/edayot/vanilla-recipes/commit/6487a98809e82f5656d9cbf5374f7157deb3962e))
+
+
 ## v0.1.0 (2024-05-01)
 
 ### Chore
