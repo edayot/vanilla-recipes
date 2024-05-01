@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "crafter-addon"
+version = "0.1.0"
+description = ""
+authors = ["edayot <pro.e.dayot@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+beet = "^0.105.0"
+mecha = "^0.94.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+
+
+[tool.beet]
+output = "build"
+
+pipeline = [
+    "main",
+    "mecha",
+]
+
+[tool.beet.meta.mecha]
+multiline = true
