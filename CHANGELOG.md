@@ -2,6 +2,17 @@
 
 
 
+## v0.2.0 (2024-05-01)
+
+### Feature
+
+* feat: shulkerbox coloring &amp; fireworks crafting ([`7c95d50`](https://github.com/edayot/vanilla-recipes/commit/7c95d50daebdadfd339c885852d8f974409aa0bd))
+
+### Fix
+
+* fix: using item predicates ([`84e1a6b`](https://github.com/edayot/vanilla-recipes/commit/84e1a6bd7220d1a4c3db814c9adecb4b4bed3243))
+
+
 ## v0.1.4 (2024-05-01)
 
 ### Unknown
