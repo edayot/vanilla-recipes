@@ -2,6 +2,13 @@
 
 
 
+## v0.1.3 (2024-05-01)
+
+### Unknown
+
+* fwdf ([`8005dab`](https://github.com/edayot/vanilla-recipes/commit/8005dab44001b4efa86bd26bb3039419fc06fac9))
+
+
 ## v0.1.2 (2024-05-01)
 
 ### Unknown
