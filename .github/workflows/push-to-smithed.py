@@ -41,9 +41,9 @@ post_url = (
 
 download_url = (
     "https://github.com/edayot/"
-    f"{all_toml["tool"]["poetry"]['name']}/releases/download/"
+    f'{all_toml["tool"]["poetry"]["name"]}/releases/download/'
     f"v{CURRENT_VERSION}/"
-    f"{all_toml["tool"]["poetry"]['name']}_v{CURRENT_VERSION}_"
+    f'{all_toml["tool"]["poetry"]["name"]}_{CURRENT_VERSION}_'
     "{ziptype}.zip"
 )
 
