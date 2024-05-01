@@ -77,23 +77,12 @@ def parse_item_list(ctx: Context, item: list[dict], tag_name: str):
         if not smithed_query_tag in ctx.data.function_tags:
             ctx.data.function_tags[smithed_query_tag] = FunctionTag()
         ctx.data.function_tags[smithed_query_tag].add(function_name)
+        ctx.data.function_tags[smithed_query_tag].add(f"{NAMESPACE}:query_tags_special")
     
-    ctx.data.predicates[tag_name] = Predicate({
-        "condition": "minecraft:entity_properties",
-        "entity": "this",
-        "predicate": {
-            "equipment": {
-                "mainhand": {
-                    "items": "#"+tag_name
-                }
-            }
-        }
-    }
-    )
 
     command = f"""
 execute 
-    if predicate {tag_name}
+    if items entity @s weapon.mainhand #{tag_name}
     run data modify storage smithed.crafter:main root.temp.item_tag append value "#{tag_name}"
 """
     ctx.data.functions[function_name].append(command)
@@ -167,6 +156,7 @@ def transform_shaped(ctx: Context, recipe: Recipe, recipe_name: str):
         smithed_tag = "smithed.crafter:event/recipes"
         if not smithed_tag in ctx.data.function_tags:
             ctx.data.function_tags[smithed_tag] = FunctionTag()
+            ctx.data.function_tags[smithed_tag].add(f"{NAMESPACE}:shaped_special")
         ctx.data.function_tags[smithed_tag].add(function_name)
 
     command = f"""
@@ -235,6 +225,7 @@ def transform_shapeless(ctx: Context, recipe: Recipe, recipe_name: str):
         smithed_tag = "smithed.crafter:event/shapeless_recipes"
         if not smithed_tag in ctx.data.function_tags:
             ctx.data.function_tags[smithed_tag] = FunctionTag()
+            ctx.data.function_tags[smithed_tag].add(f"{NAMESPACE}:shapeless_special")
         ctx.data.function_tags[smithed_tag].add(function_name)
 
     command = f"""
