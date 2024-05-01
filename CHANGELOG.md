@@ -2,6 +2,13 @@
 
 
 
+## v0.1.2 (2024-05-01)
+
+### Unknown
+
+* fdsf ([`a6508a0`](https://github.com/edayot/vanilla-recipes/commit/a6508a0029a8920e588e10dcd319a1e8966fb23f))
+
+
 ## v0.1.1 (2024-05-01)
 
 ### Fix
