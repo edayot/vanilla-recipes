@@ -23,7 +23,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.semantic_release]
 major_on_zero = false
-build_command = 'beet -s data_pack.zipped=true -s resource_pack.zipped=true && beet -s data_pack.zipped=true -s resource_pack.zipped=true -s meta.weld_deps.enabled=false -s data_pack.name="{{ project_id }}_{{ project_version }}_dp" -s resource_pack.name="{{ project_id }}_{{ project_version }}_rp"'
+build_command = 'beet -s data_pack.zipped=true -s resource_pack.zipped=true -s meta.weld_deps.enabled=true && beet -s data_pack.zipped=true -s resource_pack.zipped=true -s meta.weld_deps.enabled=false -s data_pack.name="{{ project_id }}_{{ project_version }}_dp" -s resource_pack.name="{{ project_id }}_{{ project_version }}_rp"'
 dist_path = "build"
 version_toml = ["pyproject.toml:tool.poetry.version"]
 version_source = "commit"
@@ -45,14 +45,18 @@ pipeline = [
     "mecha",
 ]
 require=[
-    "weld_deps"
+    "weld_deps",
+    "mecha.contrib.relative_location",
+    "mecha.contrib.nested_location",
 ]
 
 [tool.beet.data_pack]
 name = "{{ project_id }}_{{ project_version }}_dp_bundled"
+load = "."
 
 [tool.beet.resource_pack]
 name = "{{ project_id }}_{{ project_version }}_rp_bundled"
+load = "."
 
 [tool.beet.meta]
 mc_supports = ["1.20.5"]
@@ -62,6 +66,7 @@ multiline = true
 
 
 [tool.beet.meta.weld_deps]
+enabled = false
 enable_weld_merging=true
 clean_load_tag=true
 include_prerelease=false
