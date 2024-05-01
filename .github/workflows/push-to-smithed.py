@@ -51,7 +51,7 @@ download_url = (
 
 dep = []
 with open(".beet_cache/default/index.json", "r") as f:
-    cache = json.load(f)
+    cache = json.load(f)["json"]
 
 for d, v in cache["weld_deps_installed"].items():
     dep.append({"id": d, "version": v})
