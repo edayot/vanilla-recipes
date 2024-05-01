@@ -1,5 +1,5 @@
 
-from beet import Context, Function, Recipe, ItemTag, FunctionTag
+from beet import Context, Function, Recipe, ItemTag, FunctionTag, Predicate
 from beet.contrib.vanilla import Vanilla
 
 from nbtlib.tag import (
@@ -53,6 +53,53 @@ def transform_recipes(ctx: Context, recipe: Recipe, recipe_name: str):
             transform_shaped(ctx, recipe, recipe_name)
         case "minecraft:crafting_shapeless":
             transform_shapeless(ctx, recipe, recipe_name)
+
+
+def parse_item_list(ctx: Context, item: list[dict], tag_name: str):
+    # create a new item tag
+    item_list = []
+    for it in item:
+        if "item" in it:
+            item_list.append(it["item"])
+        elif "tag" in it:
+            item_list.append(f"#{it['tag']}")
+        else:
+            raise NotImplementedError("Unknown item format")
+    ctx.data.item_tags[tag_name] = ItemTag({
+        "values": item_list
+    })
+    item = {"tag": tag_name}
+
+    smithed_query_tag = "smithed.crafter:event/query_tags"
+    function_name = f"{NAMESPACE}:query_tags"
+    if not function_name in ctx.data.functions:
+        ctx.data.functions[function_name] = Function()
+        if not smithed_query_tag in ctx.data.function_tags:
+            ctx.data.function_tags[smithed_query_tag] = FunctionTag()
+        ctx.data.function_tags[smithed_query_tag].add(function_name)
+    
+    ctx.data.predicates[tag_name] = Predicate({
+        "condition": "minecraft:entity_properties",
+        "entity": "this",
+        "predicate": {
+            "equipment": {
+                "mainhand": {
+                    "items": "#"+tag_name
+                }
+            }
+        }
+    }
+    )
+
+    command = f"""
+execute 
+    if predicate {tag_name}
+    run data modify storage smithed.crafter:main root.temp.item_tag append value "#{tag_name}"
+"""
+    ctx.data.functions[function_name].append(command)
+
+
+    return item
     
 
 
@@ -99,19 +146,7 @@ def transform_shaped(ctx: Context, recipe: Recipe, recipe_name: str):
             if isinstance(item, list):
                 # create a new item tag
                 tag_name = f"{NAMESPACE}:recipes/{recipe_name.replace(':','/')}/{i}/{j}"
-                item_list = []
-                for it in item:
-                    if "item" in it:
-                        item_list.append(it["item"])
-                    elif "tag" in it:
-                        item_list.append(f"#{it['tag']}")
-                    else:
-                        raise NotImplementedError("Unknown item format")
-                ctx.data.item_tags[tag_name] = ItemTag({
-                    "values": item_list
-                })
-                item = {"tag": tag_name}
-
+                item = parse_item_list(ctx, item, tag_name)
             if "item" in item:
                 item_id = item["item"]
                 shaped_recipe[str(i)][j]["id"] = String(item_id)
@@ -174,18 +209,7 @@ def transform_shapeless(ctx: Context, recipe: Recipe, recipe_name: str):
         if isinstance(ingredient, list):
             # create a new item tag
             tag_name = f"{NAMESPACE}:recipes/{recipe_name.replace(':','/')}/{i}"
-            item_list = []
-            for it in ingredient:
-                if "item" in it:
-                    item_list.append(it["item"])
-                elif "tag" in it:
-                    item_list.append(f"#{it['tag']}")
-                else:
-                    raise NotImplementedError("Unknown item format")
-            ctx.data.item_tags[tag_name] = ItemTag({
-                "values": item_list
-            })
-            ingredient = {"tag": tag_name}
+            ingredient = parse_item_list(ctx, ingredient, tag_name)
         
         if "item" in ingredient:
             item_id = ingredient["item"]
