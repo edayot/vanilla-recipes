@@ -33,7 +33,7 @@ print("CURRENT_VERSION: " + CURRENT_VERSION)
 
 post_url = (
     "https://api.smithed.dev/v2/packs/"
-    f"{all_toml["tool"]["poetry"]['name']}/versions"
+    f'{all_toml["tool"]["poetry"]["name"]}/versions'
     f"?token={SMITHED_TOKEN}"
     f"&version={CURRENT_VERSION}"
 )
