@@ -54,10 +54,6 @@ require=[
 name = "{{ project_id }}_{{ project_version }}_dp_bundled"
 load = "."
 
-[tool.beet.resource_pack]
-name = "{{ project_id }}_{{ project_version }}_rp_bundled"
-load = "."
-
 [tool.beet.meta]
 mc_supports = ["1.21"]
 
