@@ -43,7 +43,7 @@ download_url = (
     "https://github.com/edayot/"
     f'{all_toml["tool"]["poetry"]["name"]}/releases/download/'
     f"v{CURRENT_VERSION}/"
-    f'{all_toml["tool"]["poetry"]["name"]}_{CURRENT_VERSION}_'
+    f'{all_toml["tool"]["poetry"]["name"].replace("-","_")}_{CURRENT_VERSION}_'
     "{ziptype}.zip"
 )
 
