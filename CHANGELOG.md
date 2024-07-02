@@ -2,6 +2,13 @@
 
 
 
+## v0.4.1 (2024-07-02)
+
+### Unknown
+
+* fix ([`1083078`](https://github.com/edayot/vanilla-recipes/commit/1083078b91f7eee1cfaedf2d0df57709a6891125))
+
+
 ## v0.4.0 (2024-07-02)
 
 ### Unknown
