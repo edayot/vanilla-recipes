@@ -2,6 +2,15 @@
 
 
 
+## v0.3.0 (2024-07-02)
+
+### Feature
+
+* feat: update to 1.21 ([`f418698`](https://github.com/edayot/vanilla-recipes/commit/f418698904fa8e12c77cef6e27b325d3e6e601a7))
+
+* feat: add pack.png ([`99837cb`](https://github.com/edayot/vanilla-recipes/commit/99837cb73d3f6ee4459f126e2c1e25b94ea4ef7b))
+
+
 ## v0.2.0 (2024-05-01)
 
 ### Feature
