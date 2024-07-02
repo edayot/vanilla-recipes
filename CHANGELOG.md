@@ -2,6 +2,13 @@
 
 
 
+## v0.4.0 (2024-07-02)
+
+### Unknown
+
+* fix download url ([`8453a70`](https://github.com/edayot/vanilla-recipes/commit/8453a70ea6bf60e06c0087bfb9d99b4227ddadb9))
+
+
 ## v0.3.0 (2024-07-02)
 
 ### Feature
