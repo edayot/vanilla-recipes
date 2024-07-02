@@ -9,9 +9,9 @@ package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.11"
-beet = "^0.105.0"
-mecha = "^0.94.0"
-weld-deps = "^0.6.0"
+beet = {git = "https://github.com/edayot/beet.git", branch = "1.21-fixes_from_TheNuclearNexus_branch"}
+mecha = ">=0.94.0"
+weld-deps = ">=0.6.0"
 
 [tool.poetry.dev-dependencies]
 python-semantic-release = "^8.7.0"
@@ -59,7 +59,7 @@ name = "{{ project_id }}_{{ project_version }}_rp_bundled"
 load = "."
 
 [tool.beet.meta]
-mc_supports = ["1.20.5"]
+mc_supports = ["1.21"]
 
 [tool.beet.meta.mecha]
 multiline = true
@@ -73,7 +73,7 @@ include_prerelease=false
 
 
 [[tool.beet.meta.weld_deps.deps]]
-id = "crafter"
-match = ">=0.2.0"
+id = "smithed.crafter.dev"
+match = ">=0.4.1"
 source = "smithed"
 

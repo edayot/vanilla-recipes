@@ -3,7 +3,6 @@
 out
 __pycache__
 .DS_Store
-pack.mcmeta
 dist/
 docs/_build/
 _build/

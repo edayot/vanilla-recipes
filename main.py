@@ -20,6 +20,7 @@ from nbtlib import serialize_tag, parse_nbt
 from copy import deepcopy
 import json
 
+import weld_deps
 
 
 MINECRAFT_VERSION = "1.20.6"
