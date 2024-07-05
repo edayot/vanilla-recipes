@@ -2,6 +2,13 @@
 
 
 
+## v0.5.0 (2024-07-05)
+
+### Fix
+
+* fix: load handleling ([`49a5c45`](https://github.com/edayot/vanilla-recipes/commit/49a5c452a019a1c035082a3b21fc7a9a06d99f1e))
+
+
 ## v0.4.1 (2024-07-02)
 
 ### Unknown
