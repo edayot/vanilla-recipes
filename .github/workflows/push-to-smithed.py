@@ -50,6 +50,8 @@ download_url = (
 
 
 dep = []
+import os
+print(os.listdir())
 with open(".beet_cache/default/index.json", "r") as f:
     cache = json.load(f)["json"]
 
