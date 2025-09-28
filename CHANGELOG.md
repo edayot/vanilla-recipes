@@ -2,6 +2,13 @@
 
 
 
+## v0.6.0 (2025-09-28)
+
+### Unknown
+
+* format ([`44945e4`](https://github.com/edayot/vanilla-recipes/commit/44945e4c0ada135afec6613ef2a14c6fbd79febf))
+
+
 ## v0.5.1 (2025-09-28)
 
 ### Unknown
