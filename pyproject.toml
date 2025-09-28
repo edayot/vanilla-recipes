@@ -53,10 +53,10 @@ require=[
 [tool.beet.data_pack]
 name = "{{ project_id }}_{{ project_version }}_dp_bundled"
 load = "."
-pack_format = 80
+pack_format = 81
 
 [tool.beet.meta]
-mc_supports = ["1.21.6"]
+mc_supports = ["1.21.8"]
 
 [tool.beet.meta.mecha]
 multiline = true
