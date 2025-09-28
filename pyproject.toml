@@ -55,7 +55,7 @@ name = "{{ project_id }}_{{ project_version }}_dp_bundled"
 load = "."
 
 [tool.beet.meta]
-mc_supports = ["1.21"]
+mc_supports = ["1.21.1"]
 
 [tool.beet.meta.mecha]
 multiline = true
