@@ -2,6 +2,13 @@
 
 
 
+## v0.8.0 (2025-09-28)
+
+### Unknown
+
+* 1.21.3 ([`1e481e1`](https://github.com/edayot/vanilla-recipes/commit/1e481e15cfe5d288965d70c12b63dc051b8d68fd))
+
+
 ## v0.7.0 (2025-09-28)
 
 
