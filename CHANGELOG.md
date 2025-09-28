@@ -2,6 +2,17 @@
 
 
 
+## v0.5.1 (2025-09-28)
+
+### Unknown
+
+* fds ([`09ecd0d`](https://github.com/edayot/vanilla-recipes/commit/09ecd0d47ff12deee8ef06cdd7c254f0dce7e7e7))
+
+* update workflow ([`28a3bd1`](https://github.com/edayot/vanilla-recipes/commit/28a3bd1cd4b8c54b4c9127ea0d5f7959fcec554c))
+
+* 1.21.1 ([`17dd5af`](https://github.com/edayot/vanilla-recipes/commit/17dd5af0d870d798dc4ffe1214ccc309c5e41dc4))
+
+
 ## v0.5.0 (2024-07-05)
 
 ### Fix
