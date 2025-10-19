@@ -56,7 +56,7 @@ load = "."
 pack_format = 81
 
 [tool.beet.meta]
-mc_supports = ["1.21.8"]
+mc_supports = ["1.21.10"]
 
 [tool.beet.meta.mecha]
 multiline = true

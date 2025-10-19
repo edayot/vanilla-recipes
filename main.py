@@ -23,7 +23,6 @@ import json
 import weld_deps
 
 
-MINECRAFT_VERSION = "1.20.6"
 NAMESPACE = "vanilla_recipes"
 
 
@@ -31,7 +30,7 @@ NAMESPACE = "vanilla_recipes"
 def beet_default(ctx: Context):
     ctx.inject(Vanilla)
 
-    mc_version = ctx.meta.get(NAMESPACE, {}).get("mc_version", MINECRAFT_VERSION)
+    mc_version = ctx.meta["mc_supports"][0]
 
     recipes = ctx.inject(Vanilla).releases[mc_version].data.recipes
     for recipe in recipes:
@@ -60,12 +59,14 @@ def parse_item_list(ctx: Context, item: list[dict], tag_name: str):
     # create a new item tag
     item_list = []
     for it in item:
-        if "item" in it:
+        if isinstance(it, str):
+            item_list.append(it)
+        elif "item" in it:
             item_list.append(it["item"])
         elif "tag" in it:
             item_list.append(f"#{it['tag']}")
         else:
-            raise NotImplementedError("Unknown item format")
+            raise NotImplementedError(f"Unknown item format {it=}")
     ctx.data.item_tags[tag_name] = ItemTag({
         "values": item_list
     })
@@ -137,7 +138,9 @@ def transform_shaped(ctx: Context, recipe: Recipe, recipe_name: str):
                 # create a new item tag
                 tag_name = f"{NAMESPACE}:recipes/{recipe_name.replace(':','/')}/{i}/{j}"
                 item = parse_item_list(ctx, item, tag_name)
-            if "item" in item:
+            elif isinstance(item, str):
+                shaped_recipe[str(i)][j]["id"] = String(item)
+            elif "item" in item:
                 item_id = item["item"]
                 shaped_recipe[str(i)][j]["id"] = String(item_id)
             elif "tag" in item:
@@ -145,7 +148,7 @@ def transform_shaped(ctx: Context, recipe: Recipe, recipe_name: str):
                 del shaped_recipe[str(i)][j]["id"]
                 shaped_recipe[str(i)][j]["item_tag"] = List[String]([String(tag)])
             else:
-                raise NotImplementedError("Unknown item format")
+                raise NotImplementedError(f"Unknown item format {item=} on {recipe=}")
             
     
     result_command = get_result_command(recipe.data["result"])
@@ -201,8 +204,12 @@ def transform_shapeless(ctx: Context, recipe: Recipe, recipe_name: str):
             # create a new item tag
             tag_name = f"{NAMESPACE}:recipes/{recipe_name.replace(':','/')}/{i}"
             ingredient = parse_item_list(ctx, ingredient, tag_name)
-        
-        if "item" in ingredient:
+        elif isinstance(ingredient, str):
+            shapeless_recipe.append(Compound({
+                "id": String(item),
+                "count": Int(item["count"]),
+            }))
+        elif "item" in ingredient:
             item_id = ingredient["item"]
             shapeless_recipe.append(Compound({
                 "id": String(item_id),
