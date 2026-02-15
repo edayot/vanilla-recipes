@@ -277,10 +277,7 @@ def previous(version: FormatSpecifier):
 
 def beet_default(ctx: Context):
     vanilla = ctx.inject(Vanilla)
-    versions = [
-        "1.21.10",
-        "1.21.11",
-    ]
+    versions = ctx.meta["mc_supports"]
     for i, version in enumerate(versions):
         vanilla_datapack = vanilla.releases[version].data
         overlay = ctx.data.overlays[f"vanilla_recipes_{version.replace(".","_")}"]
