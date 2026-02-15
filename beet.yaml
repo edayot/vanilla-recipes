@@ -1,0 +1,26 @@
+id: vanilla_recipes
+version: 0.12.0
+output: build
+
+
+data_pack:
+  load: .
+  name: "{{ project_id }}_{{ project_version }}_dp_bundled"
+
+require:
+  - weld_deps
+  - bolt
+
+pipeline:
+  - vanilla_recipes
+  - mecha
+
+
+meta:
+  weld_deps:
+    enabled: true
+    merge_with_weld: false
+
+    deps:
+      smithed.crafter.dev: latest
+      smithed.custom_block.dev: latest
