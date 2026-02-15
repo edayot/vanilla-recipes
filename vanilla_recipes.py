@@ -61,7 +61,7 @@ class RecipeTypeBase(BaseModel):
         ...
     
 
-class ItemResult(BaseModel):
+class ItemResultFull(BaseModel):
     id: str
     count: Optional[int] = None
     components: Optional[dict[str, Any]] = None
@@ -75,6 +75,15 @@ class ItemResult(BaseModel):
             nbt[String("components")] = parse_nbt(json.dumps(self.components))
         nbt[String("Slot")] = Byte(16)
         return f"data modify block ~ ~ ~ Items append value {serialize_tag(nbt)}"
+    
+
+class ItemResult(RootModel[Union[ItemResultFull, str]]):
+    root: Union[ItemResultFull, str]
+
+    def to_result_command(self) -> str:
+        if isinstance(self.root, ItemResultFull):
+            return self.root.to_result_command()
+        return ItemResultFull(id=self.root).to_result_command()
 
 class Item(RootModel):
     root: Union[str, frozenset[str]]
