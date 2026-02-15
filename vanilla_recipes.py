@@ -1,10 +1,11 @@
 
 from copy import deepcopy
-from typing import Union
+from typing import Never, Union
 from functools import cached_property
-from typing import Any, Literal, Optional, Type
+from typing import Any, Literal, Optional, Type, get_type_hints
 from beet import Context, DataPack, FormatSpecifier, Function, FunctionTag, ItemTag, Recipe
 from beet.contrib.vanilla import Vanilla
+from beet.resources.pack_format_registry import PackFormatRegistry
 from pydantic import BaseModel, RootModel, ValidationError
 from nbtlib import serialize_tag, parse_nbt
 
@@ -32,7 +33,14 @@ RecipeTypeClass: list[Type["RecipeTypeBase"]] = []
 
 
 class RecipeTypeBase(BaseModel):
-    type: str
+    type: Literal[
+        "minecraft:crafting_shaped", 
+        "crafting_shaped",
+        "minecraft:crafting_shapeless",
+        "crafting_shapeless",
+        "minecraft:crafting_transmute"
+        "crafting_transmute",
+    ]
     __internal_count = 0
     __errors: Any
 
@@ -58,7 +66,7 @@ class RecipeTypeBase(BaseModel):
         raise NotImplementedError()
     
     def export(self, data: DataPack, recipe: str):
-        ...
+        raise NotImplementedError()
     
 
 class ItemResultFull(BaseModel):
@@ -66,7 +74,7 @@ class ItemResultFull(BaseModel):
     count: Optional[int] = None
     components: Optional[dict[str, Any]] = None
 
-    def to_result_command(self) -> str: 
+    def to_result_data(self):
         nbt = Compound({
             String("id"): String(self.id),
         })
@@ -74,16 +82,22 @@ class ItemResultFull(BaseModel):
         if self.components:
             nbt[String("components")] = parse_nbt(json.dumps(self.components))
         nbt[String("Slot")] = Byte(16)
+        return nbt
+    def to_result_command(self) -> str: 
+        nbt = self.to_result_data()
         return f"data modify block ~ ~ ~ Items append value {serialize_tag(nbt)}"
     
 
 class ItemResult(RootModel[Union[ItemResultFull, str]]):
     root: Union[ItemResultFull, str]
 
-    def to_result_command(self) -> str:
+    def to_result_full(self):
         if isinstance(self.root, ItemResultFull):
-            return self.root.to_result_command()
-        return ItemResultFull(id=self.root).to_result_command()
+            return self.root
+        return ItemResultFull(id=self.root)
+
+    def to_result_command(self) -> str:
+        return self.to_result_full().to_result_command()
 
 class Item(RootModel):
     root: Union[str, frozenset[str]]
@@ -254,14 +268,65 @@ execute
     run {self.result.to_result_command()}
 """
 
-def parse_recipe(data: Any) -> RecipeTypeBase:
-    errors = []
+class CraftingTransmute(RecipeTypeBase):
+    type: Literal["minecraft:crafting_transmute", "crafting_transmute"]
+    category: Optional[str] = None
+    group: Optional[str] = None
+    input: Item
+    material: Item
+    result: ItemResult
+
+    def export(self, data: DataPack, recipe: str):
+        function_name = f"{NAMESPACE}:shapeless"
+        if not function_name in data.functions:
+            data.functions[function_name] = Function()
+            smithed_tag = "smithed.crafter:event/shapeless_recipes"
+            if not smithed_tag in data.function_tags:
+                data.function_tags[smithed_tag] = FunctionTag()
+                data.function_tags[smithed_tag].add(f"{NAMESPACE}:shapeless_special")
+            data.function_tags[smithed_tag].add(function_name)
+        
+        content = self.to_mcfunction(data, recipe)
+        data.functions[function_name].append(content)
+
+    def to_mcfunction(self, data: DataPack, recipe: str) -> str:
+        shapeless_recipe = List[Compound]()
+        input = self.input.to_nbt_check_item(data, self.format_recipe(recipe))
+        input[String("count")] = Int(1)
+
+        material = self.material.to_nbt_check_item(data, self.format_recipe(recipe))
+        material[String("count")] = Int(1)
+        
+
+        shapeless_recipe.append(input)
+        shapeless_recipe.append(material)
+        return f"""
+execute 
+    if entity @s[scores={{smithed.data=0}}] 
+    if score count smithed.data matches 2
+    if data storage smithed.crafter:input {{recipe:{serialize_tag(shapeless_recipe)}}}
+    run function ~/{recipe.replace(":", "_")}:
+        data remove storage vanilla_recipes:main item_out
+        data modify storage vanilla_recipes:main item_out set from storage smithed.crafter:input recipe[{serialize_tag(input)}]
+        data modify storage vanilla_recipes:main item_out.id set value "{self.result.to_result_full().to_result_data()[String("id")]}"
+        data modify storage vanilla_recipes:main item_out.Slot set value 16b
+        
+        data modify block ~ ~ ~ Items append from storage vanilla_recipes:main item_out
+        scoreboard players set @s smithed.data 1 
+
+
+"""
+
+
+def parse_recipe(data: Any) -> RecipeTypeBase | None:
+    if "type" not in data:
+        raise ValueError(f"{data} does not contain a type key")
+    value = data["type"]
     for cls in reversed(RecipeTypeClass):
-        try:
+        annotation = cls.model_fields["type"].annotation
+        if value in annotation.__args__:
             return cls.model_validate(data)
-        except ValidationError as e:
-            errors.append(e)
-    return RecipeTypeBase(type=data["type"], __errors=errors)
+    return None
 
 def previous(version: FormatSpecifier):
     if isinstance(version, int):
@@ -273,29 +338,36 @@ def previous(version: FormatSpecifier):
     return (version[0], version[1] - 1)
 
 
+def get_pack_format(ctx: Context, version: str):
+    data = PackFormatRegistry.model_validate_json(ctx.cache[NAMESPACE].download(f"https://raw.githubusercontent.com/misode/mcmeta/refs/tags/{version}-summary/version.json").read_text())
+    return (data.data_pack_version, data.data_pack_version_minor)
+
+
 
 
 def beet_default(ctx: Context):
     vanilla = ctx.inject(Vanilla)
     versions = ctx.meta["mc_supports"]
     for i, version in enumerate(versions):
+        print(version)
         vanilla_datapack = vanilla.releases[version].data
         overlay = ctx.data.overlays[f"vanilla_recipes_{version.replace(".","_")}"]
-        pack_format = ctx.data.pack_format_registry[version]
-        assert isinstance(pack_format, tuple)
+        pack_format = get_pack_format(ctx, version)
         overlay.pack_format = None
         overlay.min_format = pack_format
         if i + 1 < len(versions):
-            overlay.max_format = previous(ctx.data.pack_format_registry[versions[i+1]])
+            overlay.max_format = previous(get_pack_format(ctx, versions[i+1]))
         else:
             overlay.max_format = pack_format
         gen_overlay(overlay, vanilla_datapack)
     
-    ctx.data.min_format = ctx.data.pack_format_registry[versions[0]]
-    ctx.data.max_format = ctx.data.pack_format_registry[versions[-1]]
-
+    ctx.data.min_format = get_pack_format(ctx, versions[0])
+    ctx.data.max_format = get_pack_format(ctx, versions[-1])
+    
+    print("ending pipeline")
 
 def gen_overlay(data: DataPack, vanilla: DataPack):
     for key, recipe in vanilla.recipes.items():
-        recipe = parse_recipe(recipe.data)
-        recipe.export(data, key)
+        r = parse_recipe(recipe.data)
+        if not r: continue
+        r.export(data, key)
