@@ -6,34 +6,30 @@ import json
 import os
 import sys
 import toml
+import yaml
+from weld_deps.main import DepsConfig, Source
 
 try: 
     SMITHED_TOKEN = os.environ['SMITHED_TOKEN']
 except KeyError:
-    try:
-        with open("credentials.json", "r") as f:
-            creds = json.load(f)
-        SMITHED_TOKEN = creds['SMITHED_TOKEN']
-    except:
-        print("Missing credentials")
-        exit(1)
+    print("SMITHED_TOKEN not found in environment variables")
+    sys.exit(1)
+with open("beet.yaml", "r") as f:
+    beet = yaml.safe_load(f)
 
-
-beet = toml.load("pyproject.toml")['tool']['beet']
 all_toml = toml.load("pyproject.toml")
+project = all_toml["project"]
 
 print(beet)
 
-# get current version using poetry version command
-command = f"poetry version | cut -d' ' -f2"
-CURRENT_VERSION = os.popen(command).read().strip()
+CURRENT_VERSION = project["version"]
 print("CURRENT_VERSION: " + CURRENT_VERSION)
 
 
 
 post_url = (
     "https://api.smithed.dev/v2/packs/"
-    f'{all_toml["tool"]["poetry"]["name"]}/versions'
+    f'{project["name"]}/versions'
     f"?token={SMITHED_TOKEN}"
     f"&version={CURRENT_VERSION}"
 )
@@ -41,22 +37,22 @@ post_url = (
 
 download_url = (
     "https://github.com/edayot/"
-    f'{all_toml["tool"]["poetry"]["name"]}/releases/download/'
+    f'{project["name"]}/releases/download/'
     f"v{CURRENT_VERSION}/"
-    f'{all_toml["tool"]["poetry"]["name"].replace("-","_")}_{CURRENT_VERSION}_'
+    f'{project["name"].replace("-","_")}_{CURRENT_VERSION}_'
     "{ziptype}.zip"
 )
 
 
 
+weld_deps = beet.get("meta", {}).get("weld_deps", {})
+weld_deps = DepsConfig.model_validate(weld_deps)
 dep = []
-import os
-print(os.listdir())
-with open(".beet_cache/default/index.json", "r") as f:
-    cache = json.load(f)["json"]
-
-for d, v in cache["weld_deps_installed"].items():
-    dep.append({"id": d, "version": v})
+for id, version_param in weld_deps.deps_dict():
+    dep.append({
+        "id": id,
+        "version": version_param.version
+    })
 
 
 pack_version = {
