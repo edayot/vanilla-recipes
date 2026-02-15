@@ -2,6 +2,31 @@
 
 
 
+## v1.0.0 (2026-02-15)
+
+### Chore
+
+* chore: update worfkflow ([`02a01fc`](https://github.com/edayot/vanilla-recipes/commit/02a01fcbee180aba5203e70775ae3836abba7909))
+
+### Unknown
+
+* ug ([`7eb7016`](https://github.com/edayot/vanilla-recipes/commit/7eb70167faf2e2b8d00116c3bf6d3098edb77dab))
+
+* Merge pull request #1 from edayot/overlay_stuff
+
+Overlay stuff ([`f2a1623`](https://github.com/edayot/vanilla-recipes/commit/f2a1623e1eabebe12f7424a5a9005d316b765dec))
+
+* future proof ([`dc32ace`](https://github.com/edayot/vanilla-recipes/commit/dc32ace7a0a3c0b9be1601134d50fcec8a8fbb19))
+
+* wooosh ([`21afe97`](https://github.com/edayot/vanilla-recipes/commit/21afe970fa6f7d8ca0d3892bb3e49664351b7fbf))
+
+* implemtation ([`b6c08a9`](https://github.com/edayot/vanilla-recipes/commit/b6c08a9de049e9e2773e4ecd7dc270d78669208b))
+
+* foo ([`3c3018f`](https://github.com/edayot/vanilla-recipes/commit/3c3018fb6499ad2319ee82a044c90ca8d81d27f2))
+
+* new version ([`db4721f`](https://github.com/edayot/vanilla-recipes/commit/db4721faed39ec8f7104448b8d3f03cd5507c361))
+
+
 ## v0.12.0 (2025-09-28)
 
 ### Unknown
