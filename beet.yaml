@@ -1,0 +1,14 @@
+id: vanilla_recipes
+version: 0.12.0
+output: build
+
+
+data_pack:
+  load: .
+
+require:
+  - bolt
+
+pipeline:
+  - vanilla_recipes
+  - mecha

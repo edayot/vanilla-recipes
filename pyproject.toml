@@ -1,80 +1,11 @@
-[tool.poetry]
+[project]
 name = "vanilla-recipes"
 version = "0.12.0"
-description = ""
-authors = ["edayot <pro.e.dayot@gmail.com>"]
-license = "MIT"
+description = "Add your description here"
 readme = "README.md"
-package-mode = false
-
-[tool.poetry.dependencies]
-python = "^3.11"
-beet = {git = "https://github.com/TheNuclearNexus/beet.git", branch = "1.21-changes"}
-mecha = ">=0.94.0"
-weld-deps = ">=0.6.0"
-
-[tool.poetry.dev-dependencies]
-python-semantic-release = "^8.7.0"
-
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
-
-[tool.semantic_release]
-major_on_zero = false
-build_command = 'beet -s data_pack.zipped=true -s resource_pack.zipped=true -s meta.weld_deps.enabled=true && beet -s data_pack.zipped=true -s resource_pack.zipped=true -s meta.weld_deps.enabled=false -s data_pack.name="{{ project_id }}_{{ project_version }}_dp" -s resource_pack.name="{{ project_id }}_{{ project_version }}_rp"'
-dist_path = "build"
-version_toml = ["pyproject.toml:tool.poetry.version"]
-version_source = "commit"
-
-remove_dist = false
-tag_format = "v{version}"
-
-[tool.semantic_release.publish]
-dist_glob_patterns = ["build/*.zip"]
-upload_to_vcs_release = true
-
-
-
-[tool.beet]
-output = "build"
-
-pipeline = [
-    "main",
-    "mecha",
+requires-python = ">=3.14"
+dependencies = [
+    "beet>=0.114.0",
+    "bolt>=0.50.1",
+    "mecha>=0.102.2",
 ]
-require=[
-    "weld_deps",
-    "mecha.contrib.relative_location",
-    "mecha.contrib.nested_location",
-]
-
-[tool.beet.data_pack]
-name = "{{ project_id }}_{{ project_version }}_dp_bundled"
-load = "."
-pack_format = 81
-
-[tool.beet.meta]
-mc_supports = ["1.21.10"]
-
-[tool.beet.meta.mecha]
-multiline = true
-
-
-[tool.beet.meta.weld_deps]
-enabled = true
-enable_weld_merging=true
-clean_load_tag=false
-include_prerelease=false
-
-
-[[tool.beet.meta.weld_deps.deps]]
-id = "smithed.crafter.dev"
-match = ">=0.4.1"
-source = "smithed"
-
-[[tool.beet.meta.weld_deps.deps]]
-id = "smithed.custom_block.dev"
-match = ">=0.4.1"
-source = "smithed"
