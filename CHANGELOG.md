@@ -2,6 +2,13 @@
 
 
 
+## v1.0.1 (2026-02-15)
+
+### Unknown
+
+* wooosh ([`84acb2b`](https://github.com/edayot/vanilla-recipes/commit/84acb2bd6b660f7f00f0522c25e1ee667d71fc25))
+
+
 ## v1.0.0 (2026-02-15)
 
 ### Chore
