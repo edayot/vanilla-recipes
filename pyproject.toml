@@ -8,4 +8,27 @@ dependencies = [
     "beet>=0.114.0",
     "bolt>=0.50.1",
     "mecha>=0.102.2",
+    "requests>=2.32.5",
+    "python-semantic-release >=8.7.0, <9",
+    "weld-deps>=0.16.1",
 ]
+
+
+[tool.semantic_release]
+major_on_zero = false
+build_command = 'beet -s data_pack.zipped=true -s resource_pack.zipped=true -s meta.weld_deps.enabled=true && beet -s data_pack.zipped=true -s resource_pack.zipped=true -s meta.weld_deps.enabled=false -s data_pack.name="{{ project_id }}_{{ project_version }}_dp" -s resource_pack.name="{{ project_id }}_{{ project_version }}_rp"'
+dist_path = "build"
+version_toml = ["pyproject.toml:tool.poetry.version"]
+version_source = "commit"
+
+remove_dist = false
+tag_format = "v{version}"
+
+
+[tool.semantic_release.publish]
+dist_glob_patterns = ["build/*.zip"]
+upload_to_vcs_release = true
+
+
+
+
