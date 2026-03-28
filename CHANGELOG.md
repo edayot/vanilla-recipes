@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v1.1.0 (2026-03-28)
+
+### Features
+
+- Crating transmute
+  ([`552c33c`](https://github.com/edayot/vanilla-recipes/commit/552c33cecb26420d5ae0b866b453a2f93757665f))
+
+
 ## v1.0.2 (2026-02-15)
 
 
