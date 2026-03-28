@@ -17,7 +17,7 @@ pipeline:
 
 
 meta:
-  mc_supports: ["1.21.10", "1.21.11", "26.1-snapshot-7"]
+  mc_supports: ["1.21.10", "1.21.11", "26.1"]
   weld_deps:
     enabled: true
     merge_with_weld: false
